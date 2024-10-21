@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { describe, expect, test } from 'vitest';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, renderHook, screen, within } from '@testing-library/react';
 import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from '../../refactoring/components/AdminPage';
 import { Coupon, Product } from '../../types';
+import { useAccordions } from '../../refactoring/hooks/useAccordions';
 
 const mockProducts: Product[] = [
   {
@@ -229,6 +230,60 @@ describe('advanced > ', () => {
 
     test('새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
       expect(true).toBe(false);
+    });
+  });
+
+  describe('useAccordions > ', () => {
+    const accordionIds: number[] = [1, 2, 3];
+
+    test('처음에는 모든 아코디언이 닫힌 상태여야 합니다', () => {
+      const { result } = renderHook(() => useAccordions<number>());
+
+      const isAllClosed = accordionIds.every((id) => !result.current.isOpen(id));
+
+      expect(isAllClosed).toBe(true);
+    });
+
+    test('아코디언을 펼침 상태로 변경해야 합니다', () => {
+      const { result } = renderHook(() => useAccordions<number>());
+
+      act(() => {
+        result.current.toggle(accordionIds[0]);
+      });
+
+      expect(result.current.isOpen(accordionIds[0])).toBe(true);
+    });
+
+    test('아코디언을 다시 닫아야 합니다', () => {
+      const { result } = renderHook(() => useAccordions<number>());
+
+      act(() => {
+        result.current.toggle(accordionIds[0]);
+        result.current.toggle(accordionIds[0]);
+      });
+
+      expect(result.current.isOpen(accordionIds[0])).toBe(false);
+    });
+
+    test('여러 개의 아코디언을 펼침 상태로 유지해야 합니다', () => {
+      const { result } = renderHook(() => useAccordions<number>());
+
+      act(() => {
+        accordionIds.forEach((id) => {
+          result.current.toggle(id);
+        });
+      });
+
+      accordionIds.forEach((id) => {
+        expect(result.current.isOpen(id)).toBe(true);
+      });
+    });
+
+    test('처음에 펼침 상태로 노출될 아코디언을 지정할 수 있어야 합니다', () => {
+      const { result } = renderHook(() => useAccordions<number>(accordionIds));
+
+      expect(result.current.isOpen(accordionIds[0])).toBe(true);
+      expect(result.current.isOpen(accordionIds[1])).toBe(true);
     });
   });
 });
