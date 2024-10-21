@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Coupon, Discount, Product } from '../../types.ts';
 import { Accordion } from './ui/Accordion.tsx';
+import { useAccordions } from '../hooks/useAccordions.ts';
 
 interface Props {
   products: Product[];
@@ -11,7 +12,8 @@ interface Props {
 }
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
-  const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
+  const { isOpen: isAccordionOpen, toggle: toggleAccordion } = useAccordions<Product['id']>();
+
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [newDiscount, setNewDiscount] = useState<Discount>({ quantity: 0, rate: 0 });
   const [newCoupon, setNewCoupon] = useState<Coupon>({
@@ -27,18 +29,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
     stock: 0,
     discounts: [],
   });
-
-  const toggleProductAccordion = (productId: string) => {
-    setOpenProductIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(productId)) {
-        newSet.delete(productId);
-      } else {
-        newSet.add(productId);
-      }
-      return newSet;
-    });
-  };
 
   // handleEditProduct 함수 수정
   const handleEditProduct = (product: Product) => {
@@ -194,8 +184,8 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
                 testId={`product-${index + 1}`}
                 key={product.id}
                 title={`${product.name} - ${product.price}원 (재고: ${product.stock})`}
-                isOpen={openProductIds.has(product.id)}
-                onToggle={() => toggleProductAccordion(product.id)}
+                isOpen={isAccordionOpen(product.id)}
+                onToggle={() => toggleAccordion(product.id)}
               >
                 {editingProduct && editingProduct.id === product.id ? (
                   <div>
