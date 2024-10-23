@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { ProductData } from '../../services/product';
 
-interface AddProductFormProps {
-  addProduct: (data: ProductData) => void;
+interface Props {
+  onAddProduct: (data: ProductData) => void;
 }
 
-export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
-  const [newProduct, setNewProduct] = useState<ProductData>({
+export const AddProductForm = ({ onAddProduct }: Props) => {
+  const [productForm, setProductForm] = useState<ProductData>({
     name: '',
     price: 0,
     stock: 0,
@@ -14,19 +14,19 @@ export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
   });
 
   const handleClickAddButton = () => {
-    addProduct(newProduct);
+    onAddProduct(productForm);
   };
 
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProduct({ ...newProduct, name: e.target.value });
+    setProductForm({ ...productForm, name: e.target.value });
   };
 
   const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProduct({ ...newProduct, price: parseInt(e.target.value) });
+    setProductForm({ ...productForm, price: parseInt(e.target.value) });
   };
 
   const handleChangeStock = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProduct({ ...newProduct, stock: parseInt(e.target.value) });
+    setProductForm({ ...productForm, stock: parseInt(e.target.value) });
   };
 
   return (
@@ -40,7 +40,7 @@ export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
         <input
           id="productName"
           type="text"
-          value={newProduct.name}
+          value={productForm.name}
           onChange={handleChangeName}
           className="w-full p-2 border rounded"
         />
@@ -53,7 +53,7 @@ export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
         <input
           id="productPrice"
           type="number"
-          value={newProduct.price}
+          value={productForm.price}
           onChange={handleChangePrice}
           className="w-full p-2 border rounded"
         />
@@ -66,7 +66,7 @@ export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
         <input
           id="productStock"
           type="number"
-          value={newProduct.stock}
+          value={productForm.stock}
           onChange={handleChangeStock}
           className="w-full p-2 border rounded"
         />
