@@ -6,6 +6,7 @@ import { AdminPage } from '../../refactoring/components/AdminPage';
 import { Coupon, Product } from '../../types';
 import { useAccordions } from '../../refactoring/hooks/useAccordions';
 import { updateObject } from '../../refactoring/utils/objectUtils';
+import { removeDiscountFromProduct } from '../../refactoring/utils/productUtils';
 
 const mockProducts: Product[] = [
   {
@@ -227,7 +228,7 @@ describe('advanced > ', () => {
   describe('자유롭게 작성해보세요.', () => {
     describe('utils > ', () => {
       describe('updateObject > ', () => {
-        test('원본 객체를 기준으로 업데이트된 새로운 객체를 반환해야합니다.', () => {
+        test('원본 객체를 기준으로 업데이트된 새로운 객체를 반환해야 합니다.', () => {
           const originProduct: Product = {
             id: 'p1',
             name: '상품1',
@@ -248,6 +249,26 @@ describe('advanced > ', () => {
           expect(updated.price).toEqual(updates.price);
           expect(updated.discounts).toEqual(updates.discounts);
           expect(Object.is(originProduct, updated)).toBe(false);
+        });
+      });
+
+      describe('removeDiscountFromProduct', () => {
+        test('index에 해당하는 할인을 제거하고, 새로운 상품 객체를 반환해야 합니다.', () => {
+          const originProduct: Product = {
+            id: 'p1',
+            name: '상품1',
+            price: 10000,
+            stock: 20,
+            discounts: [
+              { quantity: 10, rate: 0.1 },
+              { quantity: 20, rate: 0.2 },
+            ],
+          };
+
+          const updated = removeDiscountFromProduct(originProduct, 1);
+
+          expect(updated.discounts).toHaveLength(1);
+          expect(updated.discounts[0]).toEqual(originProduct.discounts[0]);
         });
       });
     });
