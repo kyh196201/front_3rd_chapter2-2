@@ -3,6 +3,7 @@ import { Discount, Product } from '../../../types';
 import { Accordion } from '../ui/Accordion';
 import { useAccordions } from '../../hooks/useAccordions';
 import { AddProductForm } from './AddProductForm';
+import { createProduct, ProductData } from '../../services/product';
 
 interface Props {
   products: Product[];
@@ -86,7 +87,8 @@ export const ProductManage = ({ products, onProductUpdate, onProductAdd }: Props
     }
   };
 
-  const handleAddNewProduct = (newProduct: Product) => {
+  const handleAddNewProduct = (data: ProductData) => {
+    const newProduct = createProduct(data);
     onProductAdd(newProduct);
     setShowNewProductForm(false);
   };

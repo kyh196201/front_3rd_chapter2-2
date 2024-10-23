@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Product } from '../../../types';
+import { ProductData } from '../../services/product';
 
 interface AddProductFormProps {
-  addProduct: (newProduct: Product) => void;
+  addProduct: (data: ProductData) => void;
 }
 
 export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
+  const [newProduct, setNewProduct] = useState<ProductData>({
     name: '',
     price: 0,
     stock: 0,
@@ -14,8 +14,7 @@ export const AddProductForm = ({ addProduct }: AddProductFormProps) => {
   });
 
   const handleClickAddButton = () => {
-    const productWithId = { ...newProduct, id: Date.now().toString() };
-    addProduct(productWithId);
+    addProduct(newProduct);
   };
 
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
