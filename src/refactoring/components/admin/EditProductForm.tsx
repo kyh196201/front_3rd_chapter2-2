@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Discount, Product } from '../../../types';
 import { updateObject } from '../../utils/objectUtils';
+import { removeDiscountFromProduct } from '../../utils/productUtils';
 
 interface Props {
   initialProduct: Product;
@@ -31,12 +32,9 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
   };
 
   const handleRemoveDiscount = (index: number) => {
-    const newDiscounts = productForm.discounts.filter((_, i) => i !== index);
-
-    const updatedProduct = updateObject(productForm, { discounts: newDiscounts });
+    const updatedProduct = removeDiscountFromProduct(productForm, index);
 
     onRemoveDiscount(updatedProduct);
-
     setProductForm(updatedProduct);
   };
 
