@@ -5,6 +5,7 @@ import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from '../../refactoring/components/AdminPage';
 import { Coupon, Product } from '../../types';
 import { useAccordions } from '../../refactoring/hooks/useAccordions';
+import { updateObject } from '../../refactoring/utils/objectUtils';
 
 const mockProducts: Product[] = [
   {
@@ -224,8 +225,31 @@ describe('advanced > ', () => {
   });
 
   describe('자유롭게 작성해보세요.', () => {
-    test('새로운 유틸 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
-      expect(true).toBe(false);
+    describe('utils > ', () => {
+      describe('updateObject > ', () => {
+        test('원본 객체를 기준으로 업데이트된 새로운 객체를 반환해야합니다.', () => {
+          const originProduct: Product = {
+            id: 'p1',
+            name: '상품1',
+            price: 10000,
+            stock: 20,
+            discounts: [{ quantity: 10, rate: 0.1 }],
+          };
+
+          const updates: Partial<Product> = {
+            name: '상품2',
+            price: 1000,
+            discounts: [],
+          };
+
+          const updated = updateObject(originProduct, updates);
+
+          expect(updated.name).toEqual(updates.name);
+          expect(updated.price).toEqual(updates.price);
+          expect(updated.discounts).toEqual(updates.discounts);
+          expect(Object.is(originProduct, updated)).toBe(false);
+        });
+      });
     });
 
     test('새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
