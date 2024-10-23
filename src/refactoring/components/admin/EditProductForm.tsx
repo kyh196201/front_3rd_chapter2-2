@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Discount, Product } from '../../../types';
+import { updateObject } from '../../utils/objectUtils';
 
 interface Props {
   initialProduct: Product;
@@ -14,31 +15,27 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
 
   // 새로운 핸들러 함수 추가
   const handleProductNameUpdate = (newName: string) => {
-    const updatedProduct = { ...productForm, name: newName };
+    const updatedProduct = updateObject(productForm, { name: newName });
     setProductForm(updatedProduct);
   };
 
   // 새로운 핸들러 함수 추가
   const handlePriceUpdate = (newPrice: number) => {
-    const updatedProduct = { ...productForm, price: newPrice };
+    const updatedProduct = updateObject(productForm, { price: newPrice });
     setProductForm(updatedProduct);
   };
 
   const handleStockUpdate = (newStock: number) => {
-    const updatedProduct = { ...productForm, stock: newStock };
+    const updatedProduct = updateObject(productForm, { stock: newStock });
     setProductForm(updatedProduct);
   };
 
   const handleRemoveDiscount = (index: number) => {
     const newDiscounts = productForm.discounts.filter((_, i) => i !== index);
 
-    const updatedProduct = {
-      ...productForm,
-      discounts: newDiscounts,
-    };
+    const updatedProduct = updateObject(productForm, { discounts: newDiscounts });
 
     onRemoveDiscount(updatedProduct);
-    // onProductUpdate(updatedProduct);
 
     setProductForm(updatedProduct);
   };
@@ -46,14 +43,10 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
   const handleAddDiscount = () => {
     const newDiscounts = [...productForm.discounts, newDiscount];
 
-    const updatedProduct = {
-      ...productForm,
-      discounts: newDiscounts,
-    };
+    const updatedProduct = updateObject(productForm, { discounts: newDiscounts });
 
     // Entity
     onAddDiscount(updatedProduct);
-    // onProductUpdate(updatedProduct);
 
     // View
     setProductForm(updatedProduct);
@@ -65,7 +58,6 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
   // 수정 완료 핸들러 함수 추가
   const handleEditComplete = () => {
     onEditComplete(productForm);
-    // onProductUpdate(editingProduct);
   };
 
   return (
