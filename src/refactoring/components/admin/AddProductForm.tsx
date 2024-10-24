@@ -1,36 +1,31 @@
-import { useState } from 'react';
 import { ProductData } from '../../services/product';
+import { useForm } from '../../hooks/useForm';
 
 interface Props {
   onAddProduct: (data: ProductData) => void;
 }
 
 export const AddProductForm = ({ onAddProduct }: Props) => {
-  const [productForm, setProductForm] = useState<ProductData>({
-    name: '',
-    price: 0,
-    stock: 0,
-    discounts: [],
+  const {
+    handleChange,
+    handleSubmit,
+    resetForm,
+    formValues: productForm,
+  } = useForm<ProductData>({
+    initialValues: {
+      name: '',
+      price: 0,
+      stock: 0,
+      discounts: [],
+    },
+
+    onSubmit(values) {
+      onAddProduct(values);
+    },
   });
 
-  const handleClickAddButton = () => {
-    onAddProduct(productForm);
-  };
-
-  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProductForm({ ...productForm, name: e.target.value });
-  };
-
-  const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProductForm({ ...productForm, price: parseInt(e.target.value) });
-  };
-
-  const handleChangeStock = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProductForm({ ...productForm, stock: parseInt(e.target.value) });
-  };
-
   return (
-    <div className="bg-white p-4 rounded shadow mb-4">
+    <form className="bg-white p-4 rounded shadow mb-4" onSubmit={handleSubmit}>
       <h3 className="text-xl font-semibold mb-2">새 상품 추가</h3>
 
       <div className="mb-2">
@@ -40,8 +35,9 @@ export const AddProductForm = ({ onAddProduct }: Props) => {
         <input
           id="productName"
           type="text"
+          name="name"
           value={productForm.name}
-          onChange={handleChangeName}
+          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -53,8 +49,9 @@ export const AddProductForm = ({ onAddProduct }: Props) => {
         <input
           id="productPrice"
           type="number"
+          name="price"
           value={productForm.price}
-          onChange={handleChangePrice}
+          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -66,15 +63,23 @@ export const AddProductForm = ({ onAddProduct }: Props) => {
         <input
           id="productStock"
           type="number"
+          name="stock"
           value={productForm.stock}
-          onChange={handleChangeStock}
+          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
       </div>
 
-      <button onClick={handleClickAddButton} className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         추가
       </button>
-    </div>
+      <button
+        type="button"
+        onClick={() => resetForm()}
+        className="mt-1 w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+      >
+        초기화
+      </button>
+    </form>
   );
 };
