@@ -7,6 +7,7 @@ import { Coupon, Discount, Product } from '../../types';
 import { useAccordions } from '../../refactoring/hooks/useAccordions';
 import { updateObject } from '../../refactoring/utils/objectUtils';
 import { addDiscountToProduct, removeDiscountFromProduct } from '../../refactoring/utils/productUtils';
+import { useToggle } from '../../refactoring/hooks/useToggle';
 
 const createMockProduct = (): Product => ({
   id: 'p1',
@@ -301,8 +302,29 @@ describe('advanced > ', () => {
       });
     });
 
-    test('새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
-      expect(true).toBe(false);
+    describe('hooks', () => {
+      describe('useToggle', () => {
+        test('초기 상태를 설정할 수 있어야 합니다.', () => {
+          const { result } = renderHook(() => useToggle(true));
+          expect(result.current[0]).toBe(true);
+        });
+
+        test('toggle 함수를 호출해서 현재 값을 변경할 수 있어야 합니다.', () => {
+          const { result } = renderHook(() => useToggle(false));
+
+          const [prevOn, toggle] = result.current;
+
+          expect(prevOn).toBe(false);
+
+          act(() => {
+            toggle();
+          });
+
+          const [newOn] = result.current;
+
+          expect(newOn).toBe(!prevOn);
+        });
+      });
     });
   });
 
