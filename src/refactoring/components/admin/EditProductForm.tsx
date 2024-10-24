@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Discount, Product } from '../../../types';
 import { updateObject } from '../../utils/objectUtils';
-import { removeDiscountFromProduct } from '../../utils/productUtils';
+import { addDiscountToProduct, removeDiscountFromProduct } from '../../utils/productUtils';
 
 interface Props {
   initialProduct: Product;
@@ -39,9 +39,7 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
   };
 
   const handleAddDiscount = () => {
-    const newDiscounts = [...productForm.discounts, newDiscount];
-
-    const updatedProduct = updateObject(productForm, { discounts: newDiscounts });
+    const updatedProduct = addDiscountToProduct(productForm, newDiscount);
 
     // Entity
     onAddDiscount(updatedProduct);

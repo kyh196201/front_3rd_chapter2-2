@@ -1,4 +1,4 @@
-import { Product } from '../../types';
+import { Discount, Product } from '../../types';
 import { updateObject } from './objectUtils';
 
 /**
@@ -13,4 +13,20 @@ export const removeDiscountFromProduct = (product: Product, discountIndex: numbe
   const updatedProduct = updateObject(product, { discounts: newDiscounts });
 
   return updatedProduct;
+};
+
+/**
+ * 제품에 새로운 할인을 추가하고 새로운 Product 객체를 반환합니다.
+ *
+ * @param {Product} product - 할인을 추가할 Product 객체
+ * @param {Discount} discount - 추가할 새로운 할인 객체
+ * @returns {Product} 새로운 할인이 추가된 새로운 Product 객체
+ */
+export const addDiscountToProduct = (product: Product, discount: Discount): Product => {
+  const newDiscounts = [...product.discounts, discount];
+
+  return {
+    ...product,
+    discounts: newDiscounts,
+  };
 };
