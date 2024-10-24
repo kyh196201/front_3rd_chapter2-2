@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { act, fireEvent, render, renderHook, screen, within } from '@testing-library/react';
 import { CartPage } from '../../refactoring/pages/CartPage';
 import { AdminPage } from '../../refactoring/pages/AdminPage';
@@ -8,6 +8,7 @@ import { useAccordions } from '../../refactoring/hooks/useAccordions';
 import { updateObject } from '../../refactoring/utils/objectUtils';
 import { addDiscountToProduct, removeDiscountFromProduct } from '../../refactoring/utils/productUtils';
 import { useToggle } from '../../refactoring/hooks/useToggle';
+import { useForm } from '../../refactoring/hooks/useForm';
 
 const createMockProduct = (): Product => ({
   id: 'p1',
@@ -323,6 +324,98 @@ describe('advanced > ', () => {
           const [newOn] = result.current;
 
           expect(newOn).toBe(!prevOn);
+        });
+      });
+
+      describe('useForm', () => {
+        const initialValues = {
+          name: '김승우',
+          job: 'developer',
+        };
+
+        test('초기 상태를 설정할 수 있어야 합니다.', () => {
+          const { result } = renderHook(() =>
+            useForm({
+              initialValues,
+              onSubmit: vi.fn(),
+            }),
+          );
+
+          expect(result.current.formValues).toEqual(initialValues);
+        });
+
+        test('form의 값을 변경할 수 있어야 합니다.', () => {
+          const { result } = renderHook(() =>
+            useForm({
+              initialValues,
+              onSubmit: vi.fn(),
+            }),
+          );
+
+          act(() => {
+            result.current.handleChange({
+              target: { name: 'name', value: 'Sam' },
+            } as React.ChangeEvent<HTMLInputElement>);
+
+            result.current.handleChange({
+              target: { name: 'job', value: 'Frontend Developer' },
+            } as React.ChangeEvent<HTMLInputElement>);
+          });
+
+          expect(result.current.formValues.name).toBe('Sam');
+          expect(result.current.formValues.job).toBe('Frontend Developer');
+        });
+
+        test('form의 값을 초기화할 수 있어야 합니다.', () => {
+          const { result } = renderHook(() =>
+            useForm({
+              initialValues,
+              onSubmit: vi.fn(),
+            }),
+          );
+
+          act(() => {
+            result.current.handleChange({
+              target: { name: 'name', value: 'Sam' },
+            } as React.ChangeEvent<HTMLInputElement>);
+          });
+
+          expect(result.current.formValues.name).toBe('Sam');
+
+          act(() => {
+            result.current.resetForm();
+          });
+
+          expect(result.current.formValues).toEqual(initialValues);
+        });
+
+        test('handleSubmit이 호출되면, onSubmit이 현재 form의 값과 함께 호출되어야 합니다.', async () => {
+          const onSubmit = vi.fn();
+          const { result } = renderHook(() =>
+            useForm({
+              initialValues,
+              onSubmit,
+            }),
+          );
+
+          const formEvent = {
+            preventDefault: vi.fn(),
+          } as unknown as React.FormEvent;
+
+          act(() => {
+            result.current.handleChange({
+              target: { name: 'name', value: 'Sam' },
+            } as React.ChangeEvent<HTMLInputElement>);
+          });
+
+          await act(async () => {
+            await result.current.handleSubmit(formEvent);
+          });
+
+          expect(onSubmit).toHaveBeenCalledWith({
+            name: 'Sam',
+            job: 'developer',
+          });
         });
       });
     });
