@@ -5,6 +5,7 @@ import { useAccordions } from '../../hooks/useAccordions';
 import { AddProductForm } from './AddProductForm';
 import { createProduct, ProductData } from '../../services/product';
 import { EditProductForm } from './EditProductForm';
+import { useToggle } from '../../hooks/useToggle';
 
 interface Props {
   products: Product[];
@@ -14,9 +15,9 @@ interface Props {
 
 export const ProductManage = ({ products, onProductUpdate, onProductAdd }: Props) => {
   const { isOpen: isAccordionOpen, toggle: toggleAccordion } = useAccordions<Product['id']>();
+  const [showNewProductForm, toggleNewProductForm] = useToggle(false);
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [showNewProductForm, setShowNewProductForm] = useState(false);
 
   // handleEditProduct 함수 수정
   const handleEditProduct = (product: Product) => {
@@ -49,14 +50,14 @@ export const ProductManage = ({ products, onProductUpdate, onProductAdd }: Props
   const handleAddNewProduct = (data: ProductData) => {
     const newProduct = createProduct(data);
     onProductAdd(newProduct);
-    setShowNewProductForm(false);
+    toggleNewProductForm();
   };
 
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">상품 관리</h2>
       <button
-        onClick={() => setShowNewProductForm(!showNewProductForm)}
+        onClick={toggleNewProductForm}
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
       >
         {showNewProductForm ? '취소' : '새 상품 추가'}
