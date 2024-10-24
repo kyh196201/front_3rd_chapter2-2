@@ -14,20 +14,21 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
   const [productForm, setProductForm] = useState<Product>(initialProduct);
   const [newDiscount, setNewDiscount] = useState<Discount>({ quantity: 0, rate: 0 });
 
-  // 새로운 핸들러 함수 추가
-  const handleProductNameUpdate = (newName: string) => {
-    const updatedProduct = updateObject(productForm, { name: newName });
+  const handleChangeProductName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value.trim();
+    const updatedProduct = updateObject(productForm, { name });
     setProductForm(updatedProduct);
   };
 
-  // 새로운 핸들러 함수 추가
-  const handlePriceUpdate = (newPrice: number) => {
-    const updatedProduct = updateObject(productForm, { price: newPrice });
+  const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const price = parseInt(e.target.value.trim());
+    const updatedProduct = updateObject(productForm, { price });
     setProductForm(updatedProduct);
   };
 
-  const handleStockUpdate = (newStock: number) => {
-    const updatedProduct = updateObject(productForm, { stock: newStock });
+  const handleChangeStock = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const stock = parseInt(e.target.value.trim());
+    const updatedProduct = updateObject(productForm, { stock });
     setProductForm(updatedProduct);
   };
 
@@ -63,7 +64,7 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
         <input
           type="text"
           value={productForm.name}
-          onChange={(e) => handleProductNameUpdate(e.target.value)}
+          onChange={handleChangeProductName}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -72,7 +73,7 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
         <input
           type="number"
           value={productForm.price}
-          onChange={(e) => handlePriceUpdate(parseInt(e.target.value))}
+          onChange={handleChangePrice}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -81,7 +82,7 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
         <input
           type="number"
           value={productForm.stock}
-          onChange={(e) => handleStockUpdate(parseInt(e.target.value))}
+          onChange={handleChangeStock}
           className="w-full p-2 border rounded"
         />
       </div>
