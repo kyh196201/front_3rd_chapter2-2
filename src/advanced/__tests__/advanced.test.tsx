@@ -3,10 +3,21 @@ import { describe, expect, test } from 'vitest';
 import { act, fireEvent, render, renderHook, screen, within } from '@testing-library/react';
 import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from '../../refactoring/components/AdminPage';
-import { Coupon, Product } from '../../types';
+import { Coupon, Discount, Product } from '../../types';
 import { useAccordions } from '../../refactoring/hooks/useAccordions';
 import { updateObject } from '../../refactoring/utils/objectUtils';
-import { removeDiscountFromProduct } from '../../refactoring/utils/productUtils';
+import { addDiscountToProduct, removeDiscountFromProduct } from '../../refactoring/utils/productUtils';
+
+const createMockProduct = (): Product => ({
+  id: 'p1',
+  name: '상품1',
+  price: 10000,
+  stock: 20,
+  discounts: [
+    { quantity: 10, rate: 0.1 },
+    { quantity: 20, rate: 0.2 },
+  ],
+});
 
 const mockProducts: Product[] = [
   {
@@ -269,6 +280,23 @@ describe('advanced > ', () => {
 
           expect(updated.discounts).toHaveLength(1);
           expect(updated.discounts[0]).toEqual(originProduct.discounts[0]);
+        });
+      });
+
+      describe('addDiscountToProduct', () => {
+        test('할인 정보가 추가된 새로운 상품 객체를 반환해야 합니다.', () => {
+          const mockProduct = createMockProduct();
+          const discount: Discount = {
+            quantity: 0.5,
+            rate: 0.7,
+          };
+
+          const updated = addDiscountToProduct(mockProduct, discount);
+          const prevDiscounts = mockProduct.discounts;
+          const newDiscounts = updated.discounts;
+
+          expect(newDiscounts).toHaveLength(prevDiscounts.length + 1);
+          expect(newDiscounts[newDiscounts.length - 1]).toEqual(discount);
         });
       });
     });
