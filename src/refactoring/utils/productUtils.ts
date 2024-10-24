@@ -30,3 +30,7 @@ export const addDiscountToProduct = (product: Product, discount: Discount): Prod
     discounts: newDiscounts,
   };
 };
+
+export const updateProduct = (product: Product, updates: Partial<Product>): Product => {
+  return updateObject(product, updates);
+};

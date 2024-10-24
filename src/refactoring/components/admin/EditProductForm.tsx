@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Discount, Product } from '../../../types';
-import { updateObject } from '../../utils/objectUtils';
-import { addDiscountToProduct, removeDiscountFromProduct } from '../../utils/productUtils';
+import { addDiscountToProduct, removeDiscountFromProduct, updateProduct } from '../../utils/productUtils';
 
 interface Props {
   initialProduct: Product;
@@ -16,19 +15,19 @@ export const EditProductForm = ({ initialProduct, onAddDiscount, onRemoveDiscoun
 
   const handleChangeProductName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value.trim();
-    const updatedProduct = updateObject(productForm, { name });
+    const updatedProduct = updateProduct(productForm, { name });
     setProductForm(updatedProduct);
   };
 
   const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     const price = parseInt(e.target.value.trim());
-    const updatedProduct = updateObject(productForm, { price });
+    const updatedProduct = updateProduct(productForm, { price });
     setProductForm(updatedProduct);
   };
 
   const handleChangeStock = (e: React.ChangeEvent<HTMLInputElement>) => {
     const stock = parseInt(e.target.value.trim());
-    const updatedProduct = updateObject(productForm, { stock });
+    const updatedProduct = updateProduct(productForm, { stock });
     setProductForm(updatedProduct);
   };
 
